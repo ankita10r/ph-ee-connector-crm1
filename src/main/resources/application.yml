@@ -1,0 +1,34 @@
+server:
+  port: 8081
+
+spring:
+  main:
+    cloud-platform:
+      JAVA_TOOL_OPTIONS: "-Xmx4G"
+
+logging:
+  level:
+    ROOT: INFO
+
+callback_enabled: true
+
+
+zeebe:
+  client:
+    max-execution-threads: 100
+    number-of-workers: 5
+    evenly-allocated-max-jobs: "#{${zeebe.client.max-execution-threads} / ${zeebe.client.number-of-workers}}"
+  broker:
+    contactpoint: "localhost:26500"
+
+
+billers:
+  details:
+    - id: "001"
+      biller: "Biller1"
+      billerAccount: "BillerAccount1"
+      billerCategory: "BillerCategory1"
+    - id: "002"
+      biller: "Biller2"
+      billerAccount: "BillerAccount2"
+      billerCategory: "BillerCategory2"
