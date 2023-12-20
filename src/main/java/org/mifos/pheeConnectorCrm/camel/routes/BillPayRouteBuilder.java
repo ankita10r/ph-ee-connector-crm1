@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.mifos.pheeConnectorCrm.utils.BillPayEnum.*;
-import static org.mifos.pheeConnectorCrm.zeebe.ZeebeVariables.CLIENTCORRELATIONID;
+import static org.mifos.pheeConnectorCrm.zeebe.ZeebeVariables.*;
 
 @Component
 public class BillPayRouteBuilder extends ErrorHandlerRouteBuilder {
@@ -39,13 +39,14 @@ public class BillPayRouteBuilder extends ErrorHandlerRouteBuilder {
                 .process(exchange -> {
                     logger.info("Bill Payments Request: " + exchange.getIn().getBody(BillPaymentsReqDTO.class));
                     BillPaymentsResponseDTO response = setResponseBody(exchange.getIn().getBody(BillPaymentsReqDTO.class));
-                    exchange.setProperty("response", response);
                     exchange.setProperty("billPayFailed", false);
+                    exchange.setProperty(BILL_PAY_RESPONSE,response);
+                    exchange.setProperty("reason",billPaymentsResponseDTO.getReason());
+                    exchange.setProperty("code",billPaymentsResponseDTO.getCode());
+                    exchange.setProperty("status",billPaymentsResponseDTO.getStatus());
                     exchange.getIn().setBody(response.toString());
                     logger.info("Bill Payments Response: " + response);
-                })
-                .toD("https://webhook.site/e8263cf3-47c9-4d20-9e2b-5866a75dbf65"+ "?bridgeEndpoint=true&throwExceptionOnFailure=false");
-
+                });
 
     }
 

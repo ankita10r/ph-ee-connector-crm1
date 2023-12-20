@@ -14,6 +14,9 @@ public class ZeebeVariables {
     public static final String PARTY_ID_TYPE = "partyIdType";
     public static final String TENANT_ID = "tenantId";
     public static final String PLATFORM_TENANT = "Platform-TenantId";
+    public static final String PAYMENTS_NOTIFICATION_RESPONSE = "billPaymentsResponse";
+    public static final String BILL_PAYMENTS_REQ="billPaymentsReq";
+
     public static final String TRANSACTION_ID = "transactionId";
     public static final String TRANSACTION_TYPE = "transactionType";
     public static final String CLIENTCORRELATIONID = "X-CorrelationID";
