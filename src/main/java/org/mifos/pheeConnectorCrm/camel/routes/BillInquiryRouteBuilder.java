@@ -1,5 +1,6 @@
 package org.mifos.pheeConnectorCrm.camel.routes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
@@ -42,21 +43,11 @@ public class BillInquiryRouteBuilder extends ErrorHandlerRouteBuilder {
                                         billId, billerID, billerName);
                     exchange.setProperty(BILL_INQUIRY_RESPONSE, billInquiryResponseDTO);
                     exchange.setProperty(BILL_FETCH_FAILED, false);
-                    exchange.getIn().setBody(billInquiryResponseDTO);
-                    logger.info("Bill Inquiry Response: " + billInquiryResponseDTO.toString());
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(billInquiryResponseDTO);
+                    exchange.getIn().setBody(jsonString);
+                    logger.info("Bill Inquiry Response: " + jsonString);
                 });
-        from("direct:bill-inquiry-response")
-                .routeId("bill-inquiry-response")
-                        .log("Triggering callback for bill inquiry response")
-                        .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
-                        .process(exchange -> {
-                            String billInquiryResponseDTO =
-                                    exchange.getProperty(BILL_INQUIRY_RESPONSE, String.class);
-                            exchange.getIn().setBody(billInquiryResponseDTO);
-                            logger.info("Bill Inquiry Response: " + billInquiryResponseDTO);
-                        })
-                .log(LoggingLevel.DEBUG, "Sending bill inquiry response to callback URL: ${exchangeProperty.X-CallbackURL}")
-                .toD("${exchangeProperty.X-CallbackURL}" + "?bridgeEndpoint=true&throwExceptionOnFailure=false");
     }
 
     private BillInquiryResponseDTO setResponseBody(String clientCorrelationId, String billId,String billerID, String billerName) {

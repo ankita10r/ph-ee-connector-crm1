@@ -63,7 +63,7 @@ public class ZeebeWorkers {
             exchange.setProperty(BILLER_ID, variables.get(BILLER_ID).toString());
             exchange.setProperty(BILLER_NAME, variables.get(BILLER_NAME).toString());
             producerTemplate.send("direct:bill-inquiry", exchange);
-            variables.put(BILL_INQUIRY_RESPONSE, exchange.getProperty(BILL_INQUIRY_RESPONSE, String.class));
+            variables.put(BILL_INQUIRY_RESPONSE, exchange.getProperty(BILL_INQUIRY_RESPONSE));
             variables.put(BILL_FETCH_FAILED, exchange.getProperty(BILL_FETCH_FAILED));
             zeebeClient.newCompleteCommand(job.getKey()).variables(variables).send();
             logger.info("Zeebe variable {}", job.getVariablesAsMap());

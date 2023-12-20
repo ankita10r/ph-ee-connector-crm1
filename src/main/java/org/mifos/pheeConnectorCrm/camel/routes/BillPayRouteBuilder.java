@@ -1,5 +1,6 @@
 package org.mifos.pheeConnectorCrm.camel.routes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.Exchange;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.json.JSONObject;
@@ -44,7 +45,9 @@ public class BillPayRouteBuilder extends ErrorHandlerRouteBuilder {
                     exchange.setProperty("reason",billPaymentsResponseDTO.getReason());
                     exchange.setProperty("code",billPaymentsResponseDTO.getCode());
                     exchange.setProperty("status",billPaymentsResponseDTO.getStatus());
-                    exchange.getIn().setBody(response.toString());
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(response);
+                    exchange.getIn().setBody(jsonString);
                     logger.info("Bill Payments Response: " + response);
                 });
 
